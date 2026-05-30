@@ -1,28 +1,34 @@
 package highlighting.presets;
 
 import highlighting.regex.Token;
+
 import java.util.List;
 import java.util.regex.Pattern;
 
 public final class MiniJavaTokens {
 
-  // TODO (Phase I+II: RegexHighlighter/ScanningHighlighter)
-  // TODO: Define the MiniJava tokens used by the highlighters. Each token is a mapping from a
-  // regular expression to a colour (and, if applicable, a specific matching group). The order of
-  // tokens in this list determines their relative priority during highlighting. One example token
-  // definition is provided below; define the remaining tokens in an analogous way.
+    public static List<Token> defaultTokens() {
+        return List.of(
+            // Index 0: Javadoc
+            Token.of(Pattern.compile("(?s)/\\*\\*.*?\\*/"), MiniJavaColours.JAVADOC_COMMENT_COLOUR),
 
-  // Basic token set for MiniJava. Extend this list with further tokens as needed (e.g. identifiers,
-  // numeric literals, operators, brackets, whitespace), following the same pattern. Each token is
-  // defined by a regular expression and a colour. Optionally, a specific capturing group within the
-  // pattern can be selected as the "highlighted" region.
-  public static List<Token> defaultTokens() {
-    return List.of(
-        // Example: string literals (students should define further tokens below)
-        Token.of(Pattern.compile("\"([^\"\\\\]|\\\\.)*\""), MiniJavaColours.STRING_LITERAL_COLOUR)
+            // Index 1: Block Comment
+            Token.of(Pattern.compile("(?s)/\\*.*?\\*/"), MiniJavaColours.BLOCK_COMMENT_COLOUR),
 
-        // TODO: Define additional tokens for MiniJava, e.g. character literals, keywords,
-        // annotations, comments, identifiers, numbers, operators, etc.
+            // Index 2: Line Comment
+            Token.of(Pattern.compile("//.*"), MiniJavaColours.LINE_COMMENT_COLOUR),
+
+            // Index 3: String (Das war vorher verrutscht!)
+            Token.of(Pattern.compile("\"([^\"\\\\]|\\\\.)*\""), MiniJavaColours.STRING_LITERAL_COLOUR),
+
+            // Index 4: Char
+            Token.of(Pattern.compile("'([^'\\\\]|\\\\.)'"), MiniJavaColours.CHAR_LITERAL_COLOUR),
+
+            // Index 5: Annotation
+            Token.of(Pattern.compile("@[a-zA-Z\\-]+"), MiniJavaColours.ANNOTATION_COLOUR),
+
+            // Index 6: Keyword
+            Token.of(Pattern.compile("\\b(package|import|class|public|private|final|return|null|new)\\b"), MiniJavaColours.KEYWORD_COLOUR)
         );
-  }
+    }
 }

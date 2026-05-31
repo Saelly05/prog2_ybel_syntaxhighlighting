@@ -1,0 +1,52 @@
+name: Projekt CI Pipeline
+
+
+on:
+    pull_request:
+    workflow_dispatch:
+
+jobs:
+
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Code auschecken
+              uses: actions/checkout@v4
+            - name: Java einrichten
+              uses: actions/setup-java@v4
+              with:
+                  java-version: '25'
+                  distribution: 'temurin'
+            - name: Gradle Build (nur Klassen kompilieren)
+
+              run: ./gradlew classes testClasses
+
+
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Code auschecken
+              uses: actions/checkout@v4
+            - name: Java einrichten
+              uses: actions/setup-java@v4
+              with:
+                  java-version: '25'
+                  distribution: 'temurin'
+            - name: Gradle Test
+
+              run: ./gradlew test
+
+
+    format:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Code auschecken
+              uses: actions/checkout@v4
+            - name: Java einrichten
+              uses: actions/setup-java@v4
+              with:
+                  java-version: '25'
+                  distribution: 'temurin'
+            - name: Spotless Format Check
+
+              run: ./gradlew spotlessCheck

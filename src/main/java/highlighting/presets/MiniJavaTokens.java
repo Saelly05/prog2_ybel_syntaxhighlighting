@@ -1,6 +1,7 @@
 package highlighting.presets;
 
 import highlighting.regex.Token;
+
 import java.util.List;
 import java.util.regex.Pattern;
 

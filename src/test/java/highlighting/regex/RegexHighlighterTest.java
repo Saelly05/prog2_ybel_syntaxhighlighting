@@ -1,74 +1,75 @@
 package highlighting.regex;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import highlighting.core.HighlightRegion;
 import highlighting.presets.MiniJavaColours;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class RegexHighlighterTest {
 
-   
-    private final RegexHighlighter highlighter = new RegexHighlighter();
+  private final RegexHighlighter highlighter = new RegexHighlighter();
 
-    @Test
-    void testNoMatches() {
-        
-        assertTrue(highlighter.computeRegions("").isEmpty(), "Sollte bei leerem String nichts finden");
-        assertTrue(highlighter.computeRegions("just some plain text").isEmpty(), "Sollte keine Regionen finden");
-    }
+  @Test
+  void testNoMatches() {
 
-    @Test
-    void testSimpleNoOverlap() {
-       
-        List<HighlightRegion> regions = highlighter.computeRegions("public class");
+    assertTrue(highlighter.computeRegions("").isEmpty(), "Sollte bei leerem String nichts finden");
+    assertTrue(
+        highlighter.computeRegions("just some plain text").isEmpty(),
+        "Sollte keine Regionen finden");
+  }
 
-        assertEquals(2, regions.size());
+  @Test
+  void testSimpleNoOverlap() {
 
-        assertEquals(0, regions.get(0).start());
-        assertEquals(6, regions.get(0).end());
-        assertEquals(MiniJavaColours.KEYWORD_COLOUR, regions.get(0).colour());
+    List<HighlightRegion> regions = highlighter.computeRegions("public class");
 
-        assertEquals(7, regions.get(1).start());
-        assertEquals(12, regions.get(1).end());
-        assertEquals(MiniJavaColours.KEYWORD_COLOUR, regions.get(1).colour());
-    }
+    assertEquals(2, regions.size());
 
-    @Test
-    void testConsecutiveRegions() {
-        
-        List<HighlightRegion> regions = highlighter.computeRegions("\"a\"//b");
+    assertEquals(0, regions.get(0).start());
+    assertEquals(6, regions.get(0).end());
+    assertEquals(MiniJavaColours.KEYWORD_COLOUR, regions.get(0).colour());
 
-        assertEquals(2, regions.size(), "Beide direkt aufeinanderfolgenden Regionen müssen bleiben");
+    assertEquals(7, regions.get(1).start());
+    assertEquals(12, regions.get(1).end());
+    assertEquals(MiniJavaColours.KEYWORD_COLOUR, regions.get(1).colour());
+  }
 
-       
-        assertEquals(0, regions.get(0).start());
-        assertEquals(3, regions.get(0).end());
+  @Test
+  void testConsecutiveRegions() {
 
-        
-        assertEquals(3, regions.get(1).start());
-        assertEquals(6, regions.get(1).end());
-    }
+    List<HighlightRegion> regions = highlighter.computeRegions("\"a\"//b");
 
-    @Test
-    void testOverlapKeywordInComment() {
-       
-        List<HighlightRegion> regions = highlighter.computeRegions("// public class");
+    assertEquals(2, regions.size(), "Beide direkt aufeinanderfolgenden Regionen müssen bleiben");
 
-        assertEquals(1, regions.size(), "Der Kommentar sollte die Keywords verschlucken");
-        assertEquals(0, regions.get(0).start());
-        assertEquals(15, regions.get(0).end());
-        assertEquals(MiniJavaColours.LINE_COMMENT_COLOUR, regions.get(0).colour());
-    }
+    assertEquals(0, regions.get(0).start());
+    assertEquals(3, regions.get(0).end());
 
-    @Test
-    void testOverlapJavadocVsBlockComment() {
-       
-        List<HighlightRegion> regions = highlighter.computeRegions("/** doc */");
+    assertEquals(3, regions.get(1).start());
+    assertEquals(6, regions.get(1).end());
+  }
 
-        assertEquals(1, regions.size());
-        assertEquals(MiniJavaColours.JAVADOC_COMMENT_COLOUR, regions.get(0).colour(), "Javadoc muss Vorrang vor normalem Blockkommentar haben");
-    }
+  @Test
+  void testOverlapKeywordInComment() {
+
+    List<HighlightRegion> regions = highlighter.computeRegions("// public class");
+
+    assertEquals(1, regions.size(), "Der Kommentar sollte die Keywords verschlucken");
+    assertEquals(0, regions.get(0).start());
+    assertEquals(15, regions.get(0).end());
+    assertEquals(MiniJavaColours.LINE_COMMENT_COLOUR, regions.get(0).colour());
+  }
+
+  @Test
+  void testOverlapJavadocVsBlockComment() {
+
+    List<HighlightRegion> regions = highlighter.computeRegions("/** doc */");
+
+    assertEquals(1, regions.size());
+    assertEquals(
+        MiniJavaColours.JAVADOC_COMMENT_COLOUR,
+        regions.get(0).colour(),
+        "Javadoc muss Vorrang vor normalem Blockkommentar haben");
+  }
 }
